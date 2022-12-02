@@ -7,7 +7,11 @@ pd.set_option('display.max_rows', 700)
 pd.set_option('display.max_columns', 100)
 
 #visualize all plants that are operational in east germany
-df = setup_data()
+# set file path as relative path(if doesn't work then use raw string)
+path = "./data/Stromerzeuger_east_data.csv"
+path = r'D:\Main\RWTH Study\Data Analytics and Visualization Lab\pycharm_projects\DVA-LAB\Agro_PV_Data\data\Stromerzeuger_east_data.csv'
+delimiter = ";"
+df = setup_data(path, delimiter)
 df
 # find out all categories of operational status
 df['operational_status'].unique()
