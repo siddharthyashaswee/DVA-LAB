@@ -20,6 +20,7 @@ df['operational_status'].unique()
 
 # selecting only operational PV
 opdf = df[df['operational_status'] == 'In Betrieb']
+opdf.isnull().sum()
 # filter out latitudes and longitudes which are not NaN
 latdf = opdf[opdf['latitude'].notnull()]
 latdf = opdf[opdf['longitude'].notnull()]

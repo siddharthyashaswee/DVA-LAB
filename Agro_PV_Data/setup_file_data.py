@@ -1,15 +1,18 @@
 import pandas as pd
+import os
 
 pd.set_option('display.max_rows', 700)
 pd.set_option('display.max_columns', 100)
+
+#only change file path to load new csv
+file_path=r'D:\Main\RWTH Study\Data Analytics and Visualization Lab\pycharm_projects\DVA-LAB\Agro_PV_Data\data\Stromerzeuger_east_data.csv'
 
 
 # read the data
 # rename cols to english
 # convert lat and long values to float64
-def setup_data(path, delimiter):
-
-    df = pd.read_csv(path, delimiter)
+def setup_data():
+    df = pd.read_csv(file_path, ";")
 
     # removing columns where everything is NA
     df.dropna(axis=1, how='all', inplace=True)
@@ -53,12 +56,27 @@ def setup_data(path, delimiter):
     df = df.rename(columns={'Installierte Leistung': 'installed_capacity'})
     df = df.rename(columns={'Zuschlagnummer (EEG/KWK-Ausschreibung)': 'surcharge_number'})
 
-    # convert your lat and long to floats
-    df['latitude'] = df['latitude'].astype("string")
-    df['longitude'] = df['longitude'].astype("string")
-    df['latitude'] = df['latitude'].str.replace(',', '.')
-    df['longitude'] = df['longitude'].str.replace(',', '.')
-    df['latitude'] = df['latitude'].astype("float64")
-    df['longitude'] = df['longitude'].astype("float64")
+    # convert appropriate cols to float64
+    convert_to_float(df, 'latitude')
+    convert_to_float(df, 'longitude')
 
+    convert_to_float(df, 'gross_power_of_the_unit')
+    convert_to_float(df, 'net_power_rating_of_the_unit')
+    convert_to_float(df, 'installed_capacity')
+    convert_to_float(df, 'number_of_solar_modules')
+
+    return df
+
+
+# convert an object to float by replacing the commas
+def convert_to_float(df, col_name):
+    df[col_name] = df[col_name].astype("string")
+    df[col_name] = df[col_name].str.replace(',', '.')
+    df[col_name] = df[col_name].astype("float64")
+    return df
+
+
+def select_operational_units(df):
+    # selecting only operational PV
+    df = df[df['operational_status'] == 'In Betrieb']
     return df
